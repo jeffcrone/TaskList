@@ -4,8 +4,13 @@ namespace TaskList.Models
 {
 	public class TaskContext : DbContext
 	{
-		public TaskContext(DbContextOptions<TaskContext> options) : base(options)
+		public string DbPath { get; }
+
+		public TaskContext()
 		{
+			var folder = Environment.SpecialFolder.LocalApplicationData;
+			var path = Environment.GetFolderPath(folder);
+			DbPath = System.IO.Path.Join(path, "tasklist.db");
 		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
