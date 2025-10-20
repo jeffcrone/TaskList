@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TaskList.Models;
 
 namespace TaskList.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaskItemsController : ControllerBase
+	[EnableCors("AllowAllOrigins")]
+	public class TaskItemsController : ControllerBase
     {
         private readonly TaskContext _context;
 
@@ -20,8 +22,8 @@ namespace TaskList.Controllers
             _context = context;
         }
 
-        // GET: api/TaskItems
-        [HttpGet]
+		// GET: api/TaskItems
+		[HttpGet]
         public async Task<ActionResult<IEnumerable<TaskItem>>> GetTaskItems()
         {
             return await _context.TaskItems.ToListAsync();

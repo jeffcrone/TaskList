@@ -3,6 +3,17 @@ using TaskList.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowAllOrigins",
+		policy =>
+		{
+			policy.AllowAnyOrigin()
+				  .AllowAnyHeader()
+				  .AllowAnyMethod();
+		});
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -16,6 +27,8 @@ builder.Services.AddScoped<ITaskContext>(sp => sp.GetRequiredService<TaskContext
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseCors("AllowAllOrigins");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
