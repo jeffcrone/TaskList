@@ -1,6 +1,13 @@
-@TaskList_HostAddress = http://localhost:5062
+@TaskList_HostAddress = https://localhost:7229
 
-GET {{TaskList_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{TaskList_HostAddress}}/api/taskitems
+Content-Type: application/json
+
+{
+  "Title": "Clean up your room",
+  "Description": "It is so dirty.",
+  "IsComplete": false,
+  "CreatedAt": "2019-07-26T16:59:57-05:00"
+}
 
 ###

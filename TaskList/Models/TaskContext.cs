@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace TaskList.Models
 {
-	public class TaskContext : DbContext
+	public class TaskContext : DbContext, ITaskContext
 	{
 		public string DbPath { get; }
 
-		public TaskContext()
+		public TaskContext(DbContextOptions<TaskContext> options) : base(options)
 		{
 			var folder = Environment.SpecialFolder.LocalApplicationData;
 			var path = Environment.GetFolderPath(folder);

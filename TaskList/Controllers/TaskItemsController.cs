@@ -77,11 +77,42 @@ namespace TaskList.Controllers
         [HttpPost]
         public async Task<ActionResult<TaskItem>> PostTaskItem(TaskItem taskItem)
         {
-            _context.TaskItems.Add(taskItem);
-            await _context.SaveChangesAsync();
+			if (taskItem.Id == default(int))
+			{
+				// Create new task item
+				_context.TaskItems.Add(taskItem);
+				await _context.SaveChangesAsync();
+			} else
+            {
+				// Update existing task item
+				var checkTaskItem = await _context.TaskItems.FindAsync(taskItem.Id);
+				if (checkTaskItem == null)
+				{
+					return NotFound();
+				}
 
-            return CreatedAtAction("GetTaskItem", new { id = taskItem.Id }, taskItem);
-        }
+				_context.Entry(taskItem).State = EntityState.Modified;
+
+				try
+				{
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!TaskItemExists(taskItem.Id))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+			}
+
+
+			return CreatedAtAction(nameof(GetTaskItem), new { id = taskItem.Id }, taskItem);
+		}
 
         // DELETE: api/TaskItems/5
         [HttpDelete("{id}")]
