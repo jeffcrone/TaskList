@@ -24,9 +24,20 @@ namespace TaskList.Controllers
 
 		// GET: api/TaskItems
 		[HttpGet]
-        public async Task<ActionResult<IEnumerable<TaskItem>>> GetTaskItems()
+        public async Task<ActionResult<IEnumerable<TaskItem>>> GetTaskItems([FromQuery] int? startValue, [FromQuery] int? endValue)
         {
-            return await _context.TaskItems.ToListAsync();
+            if (startValue.HasValue && endValue.HasValue)
+            {
+                // Pagination
+                return await _context.TaskItems
+                    .Where(t => t.Id >= startValue && t.Id <= endValue)
+                    .ToListAsync();
+			}
+			else
+			{
+				//No pagination
+				return await _context.TaskItems.ToListAsync();
+			}
         }
 
         // GET: api/TaskItems/5
