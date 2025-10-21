@@ -91,25 +91,29 @@ namespace TaskList.Controllers
 				if (checkTaskItem == null)
 				{
 					return NotFound();
+				} else
+                {
+                    checkTaskItem.Title = taskItem.Title;
+                    checkTaskItem.Description = taskItem.Description;
+                    checkTaskItem.IsComplete = taskItem.IsComplete;
+					checkTaskItem.CreatedAt = taskItem.CreatedAt;
 				}
 
-				_context.Entry(taskItem).State = EntityState.Modified;
-
-				try
-				{
-					await _context.SaveChangesAsync();
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					if (!TaskItemExists(taskItem.Id))
-					{
-						return NotFound();
-					}
-					else
-					{
-						throw;
-					}
-				}
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TaskItemExists(taskItem.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
 			}
 
 
